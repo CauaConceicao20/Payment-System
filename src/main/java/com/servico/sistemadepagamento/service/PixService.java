@@ -30,18 +30,26 @@ public class PixService {
     }
 
     public JSONObject pixCreate() {
-       return executarOperacao("pixCreateEvp", new HashMap<>());
+       return performOperation("pixCreateEvp", new HashMap<>());
     }
 
     public JSONObject pixList() {
-        return executarOperacao("pixListEvp", new HashMap<>());
+        return performOperation("pixListEvp", new HashMap<>());
     }
 
     public JSONObject pixDelete(final String pixkey) {
         Map<String, String> params = new HashMap<>();
         params.put("chave", pixkey);
-        return executarOperacao("pixDeleteEvp", params);
+        return performOperation("pixDeleteEvp", params);
     }
+
+    public JSONObject pixReceived(final String start, final String end) {
+        Map<String, String> params = new HashMap<>();
+        params.put("inicio", start);
+        params.put("fim", end);
+        return performOperation("pixReceivedList", params);
+    }
+
 
     public JSONObject pixCreateCharge(PixChargeRequest pixChargeRequest) {
 
@@ -97,7 +105,7 @@ public class PixService {
         }
     }
 
-    private JSONObject executarOperacao(String operation, Map<String, String> params) {
+    private JSONObject performOperation(String operation, Map<String, String> params) {
         final var retorno = new JSONObject();
         try {
             EfiPay efi = new EfiPay(options);

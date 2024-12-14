@@ -19,6 +19,7 @@ public class PixController {
         this.pixService = pixService;
     }
 
+    @GetMapping
     public ResponseEntity<String> pixCreate() {
         JSONObject response = pixService.pixCreate();
         return ResponseEntity.ok()
@@ -28,6 +29,13 @@ public class PixController {
     @GetMapping("/v1/pixList")
     public ResponseEntity<String> pixList() {
         JSONObject response = pixService.pixList();
+        return ResponseEntity.ok()
+                .body(response.toString());
+    }
+
+    @GetMapping("/v1/pixReceived")
+    public ResponseEntity<String> pixReceived(@RequestParam("start") String start, @RequestParam("end") String end) {
+        JSONObject response = pixService.pixReceived(start, end);
         return ResponseEntity.ok()
                 .body(response.toString());
     }
