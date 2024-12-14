@@ -21,4 +21,4 @@
 </ul>
 
 <h2>Contato</h2>
-<p>Se tiver dúvidas ou sugestões, entre em contato pelo email: <code>seuemail@dominio.com</code>.</p>
+<p>Se tiver dúvidas ou sugestões, entre em contato pelo email: <code>cauaconceicaodev@hotmail.com</code>.</p>
