@@ -50,6 +50,12 @@ public class PixService {
         return performOperation("pixReceivedList", params);
     }
 
+    public JSONObject pixDetailsCharge(final String txId) {
+        Map<String, String> params = new HashMap<>();
+        params.put("txid", txId);
+        return performOperation("pixDetailCharge", params);
+    }
+
 
     public JSONObject pixCreateCharge(PixChargeRequest pixChargeRequest) {
 

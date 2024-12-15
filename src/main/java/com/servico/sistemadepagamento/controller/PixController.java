@@ -47,6 +47,13 @@ public class PixController {
                 .body(response.toString());
     }
 
+    @GetMapping("/v1/pixCharge")
+    public ResponseEntity<String> pixDetailsCharge(@RequestParam("txId") String txId) {
+        var response = pixService.pixDetailsCharge(txId);
+        return ResponseEntity.ok()
+                .body(response.toString());
+    }
+
     @DeleteMapping
     public ResponseEntity<String> pixDelete(@RequestParam("pixKey") String pixKey) {
         var response = pixService.pixDelete(pixKey);
