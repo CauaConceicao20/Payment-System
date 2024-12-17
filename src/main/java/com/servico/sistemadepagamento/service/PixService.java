@@ -37,9 +37,9 @@ public class PixService {
         return performOperation("pixListEvp", new HashMap<>());
     }
 
-    public JSONObject pixDelete(final String pixkey) {
+    public JSONObject pixDelete(final String pixKey) {
         Map<String, String> params = new HashMap<>();
-        params.put("chave", pixkey);
+        params.put("chave", pixKey);
         return performOperation("pixDeleteEvp", params);
     }
 
