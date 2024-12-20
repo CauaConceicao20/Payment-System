@@ -6,35 +6,32 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @RestController
-@RequestMapping("/v1/api/")
+@RequestMapping("/v1/api/webhook")
 @Slf4j
 public class WebhookController {
 
     private final WebhookService webhookService;
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
-    public WebhookController(WebhookService webhookService) {
+    public WebhookController(WebhookService webhookService, KafkaTemplate<String, String> kafkaTemplate) {
         this.webhookService = webhookService;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
-    @GetMapping
-    public String hello() {
-        log.info("Recebendo GET Hello /");
-        return "Webhook Hello";
-    }
-
-    @PostMapping("/webhook/pix")
+    @PostMapping("/pix")
     public ResponseEntity<String> webhookPix(@RequestBody String body) {
         log.info("Recebendo um Post no /webhook/pix body {}", body);
+        kafkaTemplate.send("payment-confirmation",body);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/webhook")
+    @PutMapping("/registerWebhook")
     public ResponseEntity<String> webhook(@RequestParam("pixKey") String pixKey, @RequestBody WebhookConfig body) {
         log.info("Recebendo um Post no /webhook body {}", body);
         webhookService.confirmPayment(pixKey, body.webhookUrl());
