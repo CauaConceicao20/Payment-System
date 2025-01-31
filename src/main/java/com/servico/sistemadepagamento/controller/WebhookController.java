@@ -27,14 +27,14 @@ public class WebhookController {
     @PostMapping("/pix")
     public ResponseEntity<String> webhookPix(@RequestBody String body) {
         log.info("Recebendo um Post no /webhook/pix body {}", body);
-        kafkaTemplate.send("payment-confirmation",body);
+        kafkaTemplate.send("payment-confirmation", body);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/registerWebhook")
     public ResponseEntity<String> webhook(@RequestParam("pixKey") String pixKey, @RequestBody WebhookConfig body) {
         log.info("Recebendo um Post no /webhook body {}", body);
-        webhookService.confirmPayment(pixKey, body.webhookUrl());
+        webhookService.paymentConfirm(pixKey, body.webhookUrl());
         return ResponseEntity.ok().build();
     }
 

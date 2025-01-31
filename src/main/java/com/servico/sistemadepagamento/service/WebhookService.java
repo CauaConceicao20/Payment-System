@@ -24,7 +24,7 @@ public class WebhookService {
         options.put("x-skip-mtls-checking", "true");
     }
 
-    public JSONObject confirmPayment(String pixKey, String webhook) {
+    public JSONObject paymentConfirm(String pixKey, String webhook) {
         Map<String, String> params = new HashMap<>();
         params.put("chave", pixKey);
         return performOperationConfigWebhook("pixConfigWebhook", params, webhook);

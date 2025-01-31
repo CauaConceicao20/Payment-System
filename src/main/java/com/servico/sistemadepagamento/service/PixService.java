@@ -2,25 +2,28 @@ package com.servico.sistemadepagamento.service;
 
 import br.com.efi.efisdk.EfiPay;
 import br.com.efi.efisdk.exceptions.EfiPayException;
-import com.servico.sistemadepagamento.dto.PixChargeRequest;
+import com.servico.sistemadepagamento.dto.PixChargeRequestDto;
 import com.servico.sistemadepagamento.dto.PixConfig;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 @Service
 public class PixService {
 
     private final JSONObject options;
 
+    @Value("${pix.key}")
+    private String keyPix;
+
     public PixService(PixConfig pixConfig) {
+
         this.options = new JSONObject();
         this.options.put("client_id", pixConfig.getClientId());
         this.options.put("client_secret", pixConfig.getClientSecret());
@@ -30,7 +33,7 @@ public class PixService {
     }
 
     public JSONObject pixCreate() {
-       return performOperation("pixCreateEvp", new HashMap<>());
+        return performOperation("pixCreateEvp", new HashMap<>());
     }
 
     public JSONObject pixList() {
@@ -56,19 +59,20 @@ public class PixService {
         return performOperation("pixDetailCharge", params);
     }
 
-
-    public JSONObject pixCreateCharge(PixChargeRequest pixChargeRequest) {
+    public JSONObject pixCreateCharge(PixChargeRequestDto pixChargeRequestDto) {
+        System.out.println(pixChargeRequestDto.cpf());
 
         JSONObject body = new JSONObject();
         body.put("calendario", new JSONObject().put("expiracao", 3600));
-        body.put("devedor", new JSONObject().put("cpf", "12345678909").put("nome", "nome"));
-        body.put("valor", new JSONObject().put("original", pixChargeRequest.value()));
-        body.put("chave", pixChargeRequest.key());
+        body.put("devedor", new JSONObject().put("cpf", pixChargeRequestDto.cpf()).put("nome", pixChargeRequestDto.debtorName()));
+        body.put("valor", new JSONObject().put("original", pixChargeRequestDto.value()));
+        body.put("chave", keyPix);
 
         JSONArray infoAdicionais = new JSONArray();
-        infoAdicionais.put(new JSONObject().put("nome", "Campo 1").put("valor", "Informação Adicional1 do PSP-Recebedor"));
-        infoAdicionais.put(new JSONObject().put("nome", "Campo 2").put("valor", "Informação Adicional2 do PSP-Recebedor"));
+        infoAdicionais.put(new JSONObject().put("nome", pixChargeRequestDto.informationName1()).put("valor", pixChargeRequestDto.informationContent1()));
+        infoAdicionais.put(new JSONObject().put("nome", pixChargeRequestDto.informationName2()).put("valor", pixChargeRequestDto.informationContent2()));
         body.put("infoAdicionais", infoAdicionais);
+
 
         try {
             EfiPay efi = new EfiPay(options);

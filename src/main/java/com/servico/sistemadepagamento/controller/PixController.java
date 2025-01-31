@@ -1,6 +1,6 @@
 package com.servico.sistemadepagamento.controller;
 
-import com.servico.sistemadepagamento.dto.PixChargeRequest;
+import com.servico.sistemadepagamento.dto.PixChargeRequestDto;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -41,8 +41,8 @@ public class PixController {
     }
 
     @PostMapping("/v1/pixCreateCharge")
-    public ResponseEntity<String> pixCreateCharge(@RequestBody PixChargeRequest pixChargeRequest) {
-        JSONObject response = this.pixService.pixCreateCharge(pixChargeRequest);
+    public ResponseEntity<String> pixCreateCharge(@RequestBody PixChargeRequestDto pixChargeRequestDto)  {
+        JSONObject response = this.pixService.pixCreateCharge(pixChargeRequestDto);
         return ResponseEntity.ok()
                 .body(response.toString());
     }
